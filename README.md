@@ -1,4 +1,4 @@
-# 🍽️ Foodie-Fi SQL Case Study
+# 🍽️ Foodie-Fi Project
 
 ## Project Overview
 
@@ -16,7 +16,7 @@ The objective of this project is to analyze customer subscription behavior using
 This project was completed using SQL and demonstrates analytical thinking, business understanding, and advanced SQL querying techniques commonly used in Data Analyst roles.
 
 
-## Business Skills Demonstrated
+## Analysis
 
 - Customer Retention Analysis
 - Churn Analysis
@@ -28,7 +28,7 @@ This project was completed using SQL and demonstrates analytical thinking, busin
 
 
   
-## Business Questions
+## Problems 
 
 1. Total Customers
 2. Monthly Trial Distribution
@@ -44,7 +44,7 @@ This project was completed using SQL and demonstrates analytical thinking, busin
 
 
 
-## SQL Skills used
+## SQL Skills 
 
 - SELECT
 - WHERE
