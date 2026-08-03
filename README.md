@@ -1,6 +1,7 @@
-Foodie-Fi Exclusive Streaming Project
+# Foodie-Fi Exclusive Streaming Project
 
-# Project Overview
+###### Project Overview
+
 
 Foodie-Fi is a subscription-based video streaming platform that provides exclusive food content through multiple subscription plans.
 
