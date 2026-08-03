@@ -1,4 +1,4 @@
-### Foodie-Fi Exclusive Streaming Project
+### Foodie-Fi Customer Subscription & Churn Analysis
 
 ###### Project Overview
 
