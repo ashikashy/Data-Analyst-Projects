@@ -1,4 +1,4 @@
-# 🍽️ Foodie-Fi Project
+# Foodie-Fi Exclusive Streaming Project
 
 ## Project Overview
 
