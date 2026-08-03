@@ -1,6 +1,6 @@
-# Foodie-Fi Exclusive Streaming Project
+Foodie-Fi Exclusive Streaming Project
 
-## Project Overview
+# Project Overview
 
 Foodie-Fi is a subscription-based video streaming platform that provides exclusive food content through multiple subscription plans.
 
@@ -16,7 +16,7 @@ The objective of this project is to analyze customer subscription behavior using
 This project was completed using SQL and demonstrates analytical thinking, business understanding, and advanced SQL querying techniques commonly used in Data Analyst roles.
 
 
-## Analysis
+# Analysis
 
 - Customer Retention Analysis
 - Churn Analysis
@@ -44,7 +44,7 @@ This project was completed using SQL and demonstrates analytical thinking, busin
 
 
 
-## SQL Skills 
+# SQL Skills 
 
 - SELECT
 - WHERE
