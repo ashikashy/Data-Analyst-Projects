@@ -1,4 +1,4 @@
-# Foodie-Fi Exclusive Streaming Project
+### Foodie-Fi Exclusive Streaming Project
 
 ###### Project Overview
 
@@ -17,7 +17,8 @@ The objective of this project is to analyze customer subscription behavior using
 This project was completed using SQL and demonstrates analytical thinking, business understanding, and advanced SQL querying techniques commonly used in Data Analyst roles.
 
 
-# Analysis
+
+###### Analysis
 
 - Customer Retention Analysis
 - Churn Analysis
@@ -29,7 +30,8 @@ This project was completed using SQL and demonstrates analytical thinking, busin
 
 
   
-## Problems 
+
+###### Problems 
 
 1. Total Customers
 2. Monthly Trial Distribution
@@ -45,7 +47,8 @@ This project was completed using SQL and demonstrates analytical thinking, busin
 
 
 
-# SQL Skills 
+
+###### SQL Skills 
 
 - SELECT
 - WHERE
