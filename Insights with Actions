@@ -13,3 +13,30 @@
 • 54.6% moved from the trial plan to Basic Monthly
 • Customers took an average of 7 days to move from trial to their first paid subscription
 • March 2020 recorded the highest customer acquisition, with 94 new customers
+
+
+
+
+
+📊Actions :
+
+1. Trial-to-paid conversion (7-day average, 54.6% pick Basic Monthly)
+Action: Trigger a plan-comparison prompt around day 5, before the average conversion point, so customers see Annual/Pro value before defaulting to Basic Monthly.
+Impact: Shifts plan-mix toward higher-value plans without hurting conversion speed.
+
+2. Churn (33.8% of paid customers churned)
+Action: Segment churned users by plan and tenure to isolate when they leave, then hand that to product/CS to fix onboarding (if early churn) or retention offers (if late churn).
+Impact: Even a 5-10% reduction in churn compounds significantly on recurring revenue.
+
+3. Annual plan adoption
+Action: Target engaged monthly users (3+ months tenure) with an annual upgrade incentive.
+Impact: Improves retention and predictable revenue (ARR).
+
+4. Downgrades as a leading indicator
+Action: Treat downgrade as an early warning signal and trigger automatic retention outreach.
+Impact: Proactive save instead of reactive loss.
+
+5. March 2020 acquisition spike (94 new customers)
+Action: Dig into acquisition channel data for that month to find the specific driver (campaign, offer, seasonality) and test replicating it.
+Impact: Turns a one-time win into a repeatable growth lever.
+
