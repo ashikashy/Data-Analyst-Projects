@@ -48,15 +48,12 @@ COUNT(*) AS total_events
  GROUP BY p.plan_name;
  -- Question 5. What is the customer count and percentage of customers who have churned rounded to 1 decimal place? 
 select count(distinct customer_id) as customer_count,
- count(distinct case when plan_id = 4 Then customer_id end) as churned_customers,
- ROUND(
-        COUNT(DISTINCT CASE
-            WHEN plan_id = 4 THEN customer_id
-        END) * 100.0
-        / COUNT(DISTINCT customer_id),
-        1
-    ) AS churn_percentage
+count(distinct case when plan_id = 4 Then customer_id end) as churned_customers,
+ROUND(COUNT(DISTINCT CASE
+WHEN plan_id = 4 THEN customer_id
+END) * 100.0 / COUNT(DISTINCT customer_id), 1) AS churn_percentage
  from subscriptions ;
+
 --  Question 6. How many customers have churned straight after their initial free trial - what percentage is this rounded to the nearest whole number?
 WITH customer_journey AS (
     SELECT
@@ -81,169 +78,105 @@ SELECT
 FROM customer_journey
 WHERE plan_id = 0
   AND next_plan_id = 4;
--- Question 7. What is the number and percentage of customers who churned after becoming paid subscribers?
-WITH customer_status AS (
-    SELECT
-        customer_id,
-        MAX(CASE 
-            WHEN plan_id IN (1, 2, 3) THEN 1 
-            ELSE 0 
-        END) AS became_paid,
-        MAX(CASE 
-            WHEN plan_id = 4 THEN 1 
-            ELSE 0 
-        END) AS churned
-    FROM subscriptions
-    GROUP BY customer_id
-)
 
-SELECT
-    COUNT(*) AS churned_after_paid,
-    ROUND(
-        COUNT(*) * 100.0 /
-        (SELECT COUNT(DISTINCT customer_id)
-         FROM subscriptions),
-        1
-    ) AS percentage_of_customers
+-- Question 7. What is the number and percentage of customers who churned after becoming paid subscribers?
+
+WITH customer_status AS (
+SELECT customer_id,
+MAX(CASE WHEN plan_id IN (1, 2, 3) THEN 1 ELSE 0  END) AS became_paid,
+MAX(CASE WHEN plan_id = 4 THEN 1 ELSE 0 END) AS churned
+FROM subscriptions
+GROUP BY customer_id)
+
+SELECT COUNT(*) AS churned_after_paid,
+ROUND(COUNT(*) * 100.0 /
+(SELECT COUNT(DISTINCT customer_id)
+FROM subscriptions),1) AS percentage_of_customers
 FROM customer_status
 WHERE became_paid = 1
-  AND churned = 1;
-  -- Question 8 . What is the number and percentage of customer plans after their initial free trial?
-  WITH customer_journey AS (
-    SELECT
-        customer_id,
-        plan_id,
-        start_date,
-        LEAD(plan_id) OVER (
-            PARTITION BY customer_id
-            ORDER BY start_date
-        ) AS next_plan_id
-    FROM subscriptions
-)
+AND churned = 1;
 
-SELECT
-    p.plan_name AS plan_after_trial,
-    COUNT(DISTINCT cj.customer_id) AS customer_count,
-    ROUND(
-        COUNT(DISTINCT cj.customer_id) * 100.0
-        / (SELECT COUNT(DISTINCT customer_id)
-           FROM subscriptions),
-        1
-    ) AS percentage_of_customers
+  -- Question 8 . What is the number and percentage of customer plans after their initial free trial?
+
+WITH customer_journey AS (SELECT customer_id, plan_id, start_date,
+LEAD(plan_id) OVER (PARTITION BY customer_id ORDER BY start_date) AS next_plan_id
+FROM subscriptions)
+
+SELECT p.plan_name AS plan_after_trial,COUNT(DISTINCT cj.customer_id) AS customer_count,
+ROUND(COUNT(DISTINCT cj.customer_id) * 100.0 / (SELECT COUNT(DISTINCT customer_id)
+FROM subscriptions),1) AS percentage_of_customers
 FROM customer_journey AS cj
 JOIN plans AS p
-    ON cj.next_plan_id = p.plan_id
+ON cj.next_plan_id = p.plan_id
 WHERE cj.plan_id = 0
-GROUP BY
-    p.plan_name
-ORDER BY
-    customer_count DESC;
+GROUP BY p.plan_name
+ORDER BY customer_count DESC;
     
 -- Question 9. What is the customer count and percentage breakdown of all 5 plan_name values at 2020-12-31?
-WITH customer_plans AS (
-    SELECT
-        customer_id,
-        plan_id,
-        start_date,
-        ROW_NUMBER() OVER (
-            PARTITION BY customer_id
-            ORDER BY start_date DESC
-        ) AS rn
-    FROM subscriptions
-    WHERE start_date <= '2020-12-31'
-)
 
-SELECT
-    p.plan_name,
-    COUNT(*) AS customer_count,
-    ROUND(
-        COUNT(*) * 100.0
-        / (SELECT COUNT(*) FROM customer_plans WHERE rn = 1),
-        1
-    ) AS percentage
+WITH customer_plans AS (SELECT customer_id,plan_id,start_date,
+ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY start_date DESC) AS rn
+FROM subscriptions
+WHERE start_date <= '2020-12-31')
+
+SELECT p.plan_name,COUNT(*) AS customer_count,
+ROUND(COUNT(*) * 100.0 /
+(SELECT COUNT(*) FROM customer_plans WHERE rn = 1),1) AS percentage
 FROM customer_plans AS cp
 JOIN plans AS p
-    ON cp.plan_id = p.plan_id
+ON cp.plan_id = p.plan_id
 WHERE cp.rn = 1
 GROUP BY p.plan_name
 ORDER BY customer_count DESC; 
+
+
 -- Question 10. How many customers have upgraded to an annual plan in 2020?
-SELECT
-    COUNT(DISTINCT customer_id) AS customers_upgraded_to_annual
+
+SELECT COUNT(DISTINCT customer_id) AS customers_upgraded_to_annual
 FROM subscriptions
 WHERE plan_id = 3
-  AND start_date >= '2020-01-01'
-  AND start_date < '2021-01-01'; 
--- Question 11. How many customers downgraded from a Pro Monthly plan to a Basic Monthly plan in 2020?
-WITH plan_changes AS (
-    SELECT
-        customer_id,
-        plan_id AS current_plan,
-        start_date,
-        LEAD(plan_id) OVER (
-            PARTITION BY customer_id
-            ORDER BY start_date
-        ) AS next_plan,
-        LEAD(start_date) OVER (
-            PARTITION BY customer_id
-            ORDER BY start_date
-        ) AS next_start_date
-    FROM subscriptions
-)
+AND start_date >= '2020-01-01'
+AND start_date < '2021-01-01'; 
 
-SELECT
-    COUNT(DISTINCT customer_id) AS downgraded_customers
+-- Question 11. How many customers downgraded from a Pro Monthly plan to a Basic Monthly plan in 2020?
+
+WITH plan_changes AS
+(SELECT customer_id,plan_id AS current_plan,start_date,
+LEAD(plan_id) OVER ( PARTITION BY customer_id ORDER BY start_date) AS next_plan,
+LEAD(start_date) OVER (PARTITION BY customer_id ORDER BY start_date) AS next_start_date
+FROM subscriptions)
+
+SELECT COUNT(DISTINCT customer_id) AS downgraded_customers
 FROM plan_changes
 WHERE current_plan = 2
-  AND next_plan = 1
-  AND next_start_date >= '2020-01-01'
-  AND next_start_date < '2021-01-01';
-  -- Question 12. How many customers upgraded from a Basic Monthly plan to a Pro Monthly plan in 2020?
-  WITH plan_changes AS (
-    SELECT
-        customer_id,
-        plan_id AS current_plan,
-        start_date,
-        LEAD(plan_id) OVER (
-            PARTITION BY customer_id
-            ORDER BY start_date
-        ) AS next_plan,
-        LEAD(start_date) OVER (
-            PARTITION BY customer_id
-            ORDER BY start_date
-        ) AS next_start_date
-    FROM subscriptions
-)
+AND next_plan = 1
+AND next_start_date >= '2020-01-01'
+AND next_start_date < '2021-01-01';
 
-SELECT
-    COUNT(DISTINCT customer_id) AS upgraded_customers
+  -- Question 12. How many customers upgraded from a Basic Monthly plan to a Pro Monthly plan in 2020?
+
+WITH plan_changes AS (SELECT customer_id,plan_id AS current_plan,start_date,
+LEAD(plan_id) OVER (PARTITION BY customer_id ORDER BY start_date) AS next_plan,
+LEAD(start_date) OVER (PARTITION BY customer_id ORDER BY start_date) AS next_start_date
+FROM subscriptions)
+
+SELECT COUNT(DISTINCT customer_id) AS upgraded_customers
 FROM plan_changes
 WHERE current_plan = 1
-  AND next_plan = 2
-  AND next_start_date >= '2020-01-01'
-  AND next_start_date < '2021-01-01';
+AND next_plan = 2
+AND next_start_date >= '2020-01-01'
+AND next_start_date < '2021-01-01';
+
 -- Question 13. How many days on average does it take for a customer to an annual plan from the day they join Foodie-Fi?
-SELECT
-    ROUND(
-        AVG(
-            DATEDIFF(
-                annual.start_date,
-                first_join.first_start_date
-            )
-        ),
-        0
-    ) AS average_days_to_annual
+SELECT ROUND(AVG(DATEDIFF(annual.start_date,first_join.first_start_date)),0) AS average_days_to_annual
 FROM
-(
-    SELECT
-        customer_id,
-        MIN(start_date) AS first_start_date
-    FROM subscriptions
-    GROUP BY customer_id
-) AS first_join
+(SELECT customer_id,MIN(start_date) AS first_start_date
+FROM subscriptions
+GROUP BY customer_id) AS first_join
 JOIN subscriptions AS annual
-    ON first_join.customer_id = annual.customer_id
+ON first_join.customer_id = annual.customer_id
 WHERE annual.plan_id = 3; 
+
 -- Question 14. Which month had the highest number of new customers?
 WITH first_join AS (
     SELECT
