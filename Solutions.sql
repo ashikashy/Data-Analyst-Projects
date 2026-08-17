@@ -19,8 +19,7 @@ ORDER BY  total_events desc;
 
 -- PROBLEM STATEMENT #1: How many customers has Foodie-Fi ever had? 
 
-SELECT
-COUNT( DISTINCT customer_id) as total_customers
+SELECT COUNT( DISTINCT customer_id) as total_customers
 FROM subscriptions;
   
 -- PROBLEM STATEMENT #2: What is the monthly distribution of trial plan start_date values for our dataset - use the start of the month as the group by value
@@ -29,10 +28,8 @@ SELECT DATE_FORMAT(start_date, '%Y-%m-01') AS trial_month,
 COUNT(DISTINCT customer_id) AS trial_customers
 FROM subscriptions
 WHERE plan_id = 0
-GROUP BY
-DATE_FORMAT(start_date, '%Y-%m-01')
-ORDER BY
-trial_month;
+GROUP BY DATE_FORMAT(start_date, '%Y-%m-01')
+ORDER BY trial_month;
 
 -- PROBLEM STATEMENT #3: Which subscription plans have the highest number of events? 
 
